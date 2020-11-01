@@ -1,0 +1,236 @@
+DOCKER RUN
+docker run --rm -it -p 8080:8080 -p 9080:9080 -p 8000:8000 -v ~/dgraph:/dgraph dgraph/standalone:v20.03.0
+
+UPDATE SCHEMA
+remove-item alias:\curl
+curl -X POST localhost:8080/admin/schema --data-binary '@schema.graphql'
+
+mutation AddTask{
+        addTask(input:[
+          {
+            title : "",
+            description : "Blue gel pen. Trimax. Aggarwal ki shop se. Aur bhi bhot kuch ayega description mai to description lambi ho jayegi.",
+            deadline : "2 Nov 12:30 PM",
+            posted_by : {
+                user_id: "U01AJCWA5HT", 
+            },
+            status : uploaded
+          }
+        ]){
+          task{
+            task_id
+            title
+            description
+            posted_by{
+                  user_id
+            }
+          }
+        }
+      }
+
+query GetAllUsers {
+      queryUser(order: {asc: username}) {
+        user_id
+        username
+        name
+        email
+        profile_picture
+        sent_requests{
+          username
+          name
+        }
+    received_requests{
+      username
+      name
+    }
+        friends {
+          username
+          name
+        }
+        best_friends{
+            username
+            name
+        }
+    received_best_friend_requests{
+      username
+    }
+    sent_best_friend_requests{
+      username
+    }
+      }
+}
+
+query GetUser{
+  getUser(user_id: "003"){
+    name
+    username
+    friends{
+      name
+      username
+    }
+    sent_requests{
+      name
+      username
+    }
+    received_best_friend_requests{
+      name
+      username
+    }
+    received_requests{
+      name
+      username
+    }
+    best_friends{
+      name
+      username
+    }
+    sent_best_friend_requests{
+      name
+      username
+    }
+  }
+}
+
+
+GET USERS
+{queryUser(filter: {}){username name friends{ username name}}}
+
+
+GET_USER_WITH_USERNAME
+{
+  getUser(username: "a"){
+    username
+    name
+    friends{
+      username
+      name
+    }
+  }
+}
+
+
+ADD USER
+mutation AddUser{
+  addUser(input:[{
+    username: "e",
+    name: "E"
+  }])
+  {
+    user{
+      username
+      name
+      friends{
+        username
+        name
+      }
+    }
+  }
+}
+
+ADD FRIEND
+mutation UpdateUser{
+  updateUser(input: {
+    filter: {
+      username: {
+        eq: "a"
+      }
+    }
+    set: {
+      friends: [
+        {
+          username: "h"
+        }
+      ]
+    }
+  }){
+    user{
+      username
+      name
+      friends{
+        username
+        name
+      }
+    }
+  }
+}
+
+ADD BEST FRIEND
+mutation AddBestFriend {
+    updateUser(input: 
+      {filter: {username: {eq: "a"}}, 
+        remove: {friends: [{username: "b"}]}, 
+        set: {best_friends: [{username: "b"}]}
+      }){
+    user{
+      username
+      name
+      friends{
+        username
+        name
+      }
+      best_friends{
+        username
+        name
+      }
+    }
+  }
+}
+
+
+
+req body {
+  type: 'interactive_message',
+  actions: [
+    { name: 'accept_tos', type: 'button', value: 'sendFriendRequest' }
+  ],
+  callback_id: 'user_button',
+  team: { id: 'TTCFNBZLP', domain: 'dawnbreakershq' },
+  channel: { id: 'D01BT2UF1JA', name: 'directmessage' },
+  user: { id: 'UTAKQ03FS', name: 'aniketpanwar.1998' },
+  action_ts: '1604000452.698323',
+  message_ts: '1604000410.000800',
+  attachment_id: '2',
+  token: 'lhGeel2TUkHrMzWMjByV4lNb',
+  is_app_unfurl: false,
+  original_message: {
+    type: 'message',
+    subtype: 'bot_message',
+    text: 'Search results for Shashank',
+    ts: '1604000410.000800',
+    bot_id: 'B01CZBZPCAD',
+    attachments: [ [Object], [Object] ]
+  },
+  response_url: 'https://hooks.slack.com/actions/TTCFNBZLP/1476380119233/Jkuo5sz89bIf4YAitdKh4gt7',
+  trigger_id: '1457019532390.930532407703.b6d2d03b5d0b811c6418c3002ec4e540'
+}
+message {
+  type: 'message',
+  subtype: 'bot_message',
+  text: 'Search results for Shashank',
+  ts: '1604000410.000800',
+  bot_id: 'B01CZBZPCAD',
+  attachments: [
+    {
+      callback_id: 'user_button',
+      fallback: 'Unable to search user',
+      text: 'ashish.sharma (Ashish Sharma)',
+      id: 1,
+      thumb_height: 72,
+      thumb_width: 72,
+      thumb_url: 'https://secure.gravatar.com/avatar/4a85c75e7bb5c7a8b004ad807f1566e1.jpg?s=72&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-72.png',
+      color: '000000',
+      actions: [Array]
+    },
+    {
+      callback_id: 'user_button',
+      fallback: 'Unable to search user',
+      text: 'shashankgupta588 (Shashank Gupta)',
+      id: 2,
+      thumb_height: 72,
+      thumb_width: 72,
+      thumb_url: 'https://avatars.slack-edge.com/2020-09-14/1373985826305_73cc716b154d8d0e6763_72.jpg',
+      color: '000000',
+      actions: [Array]
+    }
+  ]
+}

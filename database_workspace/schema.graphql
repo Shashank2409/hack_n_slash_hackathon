@@ -1,0 +1,40 @@
+type User {
+    user_id: String! @id @search(by: [hash])
+    username: String! @search(by: [hash , regexp])
+    name: String! @search(by: [term , regexp])
+    email: String @search(by: [hash])
+    profile_picture: String
+    channel_id: String!
+
+    block_list: [User]
+    friends: [User] @hasInverse(field: friends)
+    sent_requests: [User] @hasInverse(field: received_requests)
+    received_requests: [User]
+    sent_best_friend_requests: [User] @hasInverse(field: received_best_friend_requests)
+    received_best_friend_requests: [User]
+    best_friends: [User] @hasInverse(field: best_friends)
+    active_tasks: [Task] @hasInverse(field: posted_by)
+    closed_tasks: [Task] 
+    volunteered_tasks: [Task] @hasInverse(field: volunteered_by)
+    assigned_tasks: [Task] @hasInverse(field: alloted_to)
+}
+
+type Task {
+    task_id: ID!
+    title: String! @search(by: [hash , regexp])
+    description: String! 
+    # deadline: DateTime!
+    deadline: String!
+    posted_by: User! @hasInverse(field: active_tasks)
+    volunteered_by: [User] @hasInverse(field: volunteered_tasks)
+    alloted_to: User @hasInverse(field: assigned_tasks)
+    status: TaskStatus!
+}
+
+enum TaskStatus{
+    uploaded
+    volunteered
+    assigned
+    completed
+    deleted
+}
