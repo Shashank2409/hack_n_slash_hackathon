@@ -74,17 +74,20 @@ module.exports = async (req_body) => {
         console.log(userID1, userID2);
         await dbTaskModule.volunteerTask(userID2, userID1);
         console.log("volunteering action done");
+        console.log(reply.attachments[attachmentID-1])
         let task_owner = reply.attachments[attachmentID-1].fields[3].value;
         delete reply.attachments[attachmentID-1].actions;
         reply.attachments[attachmentID-1].footer = `Thanks for Volunteering. \nStart Conversation ${task_owner}`;
-
+        task_owner = task_owner.substr(2,task_owner.length-3);
+        console.log(task_owner);
         let channelID_friend = await dbUserModules.getChannelId(task_owner);
+        console.log(channelID_friend);
         channelID_friend = channelID_friend.getUser.channel_id;
         web.chat.postMessage({
             channel : channelID_friend,
-            text : `Yayy.! Your friends are there to have your back. \n<@${userID1}> have volenteered to do your task for you.\n Check all volenteered tasks by /list-my-tasks`
+            text : `Yayy.! Your friends are there to have your back.\n Check all volenteered tasks by /list-my-tasks`
         })
-
+        console.log("final reply")
         return reply;
     }
 
@@ -104,6 +107,7 @@ module.exports = async (req_body) => {
             text : `You have a new friend request from <@${userID1}>\nMake some friends by accepting friend requests\n Access Friend Requests using /list-received-friend-requests `
         })
         reply.attachments[attachmentID-1].actions = buttonBuilder(obj);
+        console.log("here")
         return reply;
     }
 
@@ -117,6 +121,7 @@ module.exports = async (req_body) => {
         }
         reply.attachments[attachmentID-1].actions = buttonBuilder(obj);
         console.log("reply2", reply.attachments);
+        console.log(":cancel")
         return reply;
     }
 
@@ -162,6 +167,7 @@ module.exports = async (req_body) => {
         }
         reply.attachments[attachmentID-1].actions = buttonBuilder(obj);
         console.log("reply2", reply.attachments);
+        console.log("here");
         return reply;
     }
 

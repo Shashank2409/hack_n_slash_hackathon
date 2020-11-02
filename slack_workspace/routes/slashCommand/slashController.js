@@ -27,7 +27,7 @@ module.exports = async (req, res, next) => {
         let query = req.body.text;
         console.log("body",req.body);
         let search_response = await dbmodule.searchUserWithName(req.body.user_id, query);
-        let heading = `Search results for ${query} from <@${req.body.user}>`;
+        let heading = `Search results for ${query} from <@${req.body.user_id}>`;
         console.log("search_user");
         let message = {
             "text": heading,
@@ -43,6 +43,7 @@ module.exports = async (req, res, next) => {
             }
         }
         console.log(message);
+        console.log("here");
         res.send(message);
     }
     else if(req.body.command === '/list-friends'){
@@ -328,5 +329,14 @@ module.exports = async (req, res, next) => {
         }
         res.send(message);
     }
-
+    else if(req.body.command === '/help'){
+        res.send({
+            "text": "Heya.!! You are new here. Try the following commands out",
+            "attachments": [
+                {
+                    "text": "/help - To search all the commands\n\n/search-user <name> - Search user with a name\n\n/list-sent-friend-requests - List all your sent friend requests\n\n/list-received-friend-requests - List all your received friend requests\n\n/list-friends - List all your registered friends\n\n/list-sent-bf-requests - List all your sent best friend requests\n\n/list-received-bf-requests - List your received best friend requests\n\n/list-best-friends - List all your registered Best Friend requests\n\n/add-task - Open a form for adding a task\n\n/list-my-tasks - List all you pending tasks\n\n/list-friends-tasks - List all the pending tasks posted by your friends\n\n/list-best-friends-tasks - List all the pending tasks posted by your Best Friends"
+                }
+            ]
+        });
+    }
 }

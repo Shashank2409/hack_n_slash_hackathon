@@ -46,17 +46,23 @@ slackEvents.on('message',(message, body) => {
         console.log("body => ", body);
         (async () => {
             console.log("inside async function");
+            try{
             const res =await web.chat.postMessage({
                 channel: message.channel,
                 text : `message wapas aagya`
             });
             console.log(res);
+            }
+            catch(error){
+                console.error();
+            }
         })();
     }
 });
 
 //Slack Interactive message handlers
 slackInteraction.action('user_button', async (message, respond)=> {
+    console.log("user button clicked");
     const reply = await actionController(message);
     return reply;
 });
@@ -110,8 +116,6 @@ slackInteraction.action('sendFriendRequest U01AJCWA5HT', (message, response) => 
     console.log(reply);
     return reply;
 });
-
-
 
 const server = createServer(express_app);
 server.listen(3000, () => {

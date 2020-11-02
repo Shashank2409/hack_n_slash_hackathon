@@ -95,12 +95,12 @@ async function fetchUsers() {
     });
     // console.log(result.members);
     let channel_result = await getChannel();
-    // console.log("channel results " , channel_result)
+    console.log("channel results " , channel_result)
     let merged_results = _.map(result.members, function(item) {
         return _.extend(item, _.findWhere(channel_result, {user : item.id}));
     });
     // console.log("final_results", merged_results)
-    // saveUsers(merged_results);
+    saveUsers(merged_results);
   }
   catch (error) {
     // console.error(error);
@@ -109,11 +109,11 @@ async function fetchUsers() {
 async function saveUsers(usersArray) {
     let userId = '';
     usersArray.forEach(async function(user){
-        if(user.is_bot==false){
-            console.log("username" , user.user);
+        if(user.is_bot==false && user.id!=null){
+            console.log("username : " , user);
             // console.log("name" , user.name);
-            var temp = await databasemodule.addUser(user.user, user.name, user.real_name, user.profile.email, user.profile.image_72, user.id);
-            // console.log("adding user "+user.name);
+            var temp = await databasemodule.addUser(user.user, user.name, user.real_name, "nullfornow", user.profile.image_72, user.id);
+            console.log("adding user "+user.name);
         }
         userId = user["id"];
         usersStore[userId] = user;
@@ -122,7 +122,7 @@ async function saveUsers(usersArray) {
     // console.log(databasemodule.getUsers("UTCRXTV5L"))
 }
 
-// fetchUsers();
+fetchUsers();
 
 
 async function getChannel() {
